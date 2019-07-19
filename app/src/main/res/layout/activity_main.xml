@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sky"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="6dp"
+        android:background=""
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background=""
+            android:fontFamily="@font/roboto_bold"
+            android:text="Score:"
+            android:textColor="@color/white"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background=""
+            android:fontFamily="@font/roboto_bold"
+            android:text="100"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background=""
+            android:fontFamily="@font/roboto_bold"
+            android:text="1.4"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:background=""
+        android:elevation="1dp">
+
+        <ImageView
+            android:id="@+id/fuel_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background=""
+            android:src="@drawable/progress_bar" />
+
+        <ImageView
+            android:id="@+id/hider"
+            android:layout_width="400dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:background=""
+            android:src="@color/grass" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/warning"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="36dp"
+        android:background=""
+        android:src="@drawable/ic_warning"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/grass" />
+    </LinearLayout>
+
+</FrameLayout>
