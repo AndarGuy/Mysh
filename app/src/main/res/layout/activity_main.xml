@@ -3,32 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/sky"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:src="@drawable/sky" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="6dp"
-        android:background=""
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background=""
             android:fontFamily="@font/roboto_bold"
             android:text="Score:"
             android:textColor="@color/white"
-            android:textSize="16dp"/>
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background=""
             android:fontFamily="@font/roboto_bold"
             android:text="100"
             android:textColor="@color/white"
@@ -39,7 +42,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background=""
             android:fontFamily="@font/roboto_bold"
             android:text="1.4"
             android:textColor="@color/white"
@@ -51,14 +53,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:background=""
         android:elevation="1dp">
 
         <ImageView
             android:id="@+id/fuel_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background=""
             android:src="@drawable/progress_bar" />
 
         <ImageView
@@ -66,7 +66,6 @@
             android:layout_width="400dp"
             android:layout_height="30dp"
             android:layout_gravity="end"
-            android:background=""
             android:src="@color/grass" />
     </FrameLayout>
 
@@ -76,14 +75,20 @@
         android:layout_height="64dp"
         android:layout_gravity="center|top"
         android:layout_marginTop="36dp"
-        android:background=""
         android:src="@drawable/ic_warning"
         android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:src="@drawable/run" />
 
         <LinearLayout
             android:layout_width="match_parent"

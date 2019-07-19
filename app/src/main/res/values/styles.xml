@@ -2,7 +2,6 @@
 
     <style name="MouseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:elevation">0dp</item>
-        <item name="android:background">@color/background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
