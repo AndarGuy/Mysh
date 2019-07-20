@@ -104,4 +104,46 @@
             android:background="@drawable/grass" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/BlackScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:elevation="100dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="top"
+            android:layout_width="match_parent"
+            android:layout_marginTop="120dp"
+            android:layout_height="30dp"
+            android:background="#C8CACA"
+            android:text="Введите номер вашего устройства:" />
+        <EditText
+            android:id="@+id/bluetoothAddress"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="top"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#A3B1B1"
+            android:text="" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_gravity="top|center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="5dp"
+            android:background="#928F8F"
+            android:onClick="CheckAddress"
+            android:text="Ввод" />
+
+    </LinearLayout>
+
 </FrameLayout>

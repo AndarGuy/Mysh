@@ -15,7 +15,7 @@ public class Cheese {
 
     private static final String TAG = "Cheese";
 
-    public static float cheeseChance = 1f / 300f;
+    public static float cheeseChance = 1f / 560f;
     private static final int SOME_OFFSET = 64;
     private float x;
     private boolean isActive;

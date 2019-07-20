@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -17,7 +18,12 @@ import static android.support.constraint.Constraints.TAG;
 public class BluetoothHelper {
 
     private boolean isConnected=false;
-    private Thread checkConnection = new Thread(new Runnable() {
+    private Thread CheckConnection = new Thread(new Runnable() {
+        @Override
+        public void run() {}
+    });
+
+    private Thread Reciver = new Thread(new Runnable() {
         @Override
         public void run() {}
     });
@@ -27,34 +33,73 @@ public class BluetoothHelper {
     private BluetoothAdapter myBluetoothAdapter;
     private BluetoothSocket btSocket = null;
     private OutputStream outStream = null;
+    private InputStream inStream = null;
+    private int Value = -1;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
     // MAC-адрес Bluetooth модуля
-    private static final String ADDRESS = "98:D3:31:F4:1D:14";
+    private static String address = "98:D3:31:F4:1D:14";
 
     public void start(){
         myBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
         startBluetoothActivityCheck();
+        startReciver();
     }
 
-    private volatile boolean isBluetoothActive = true;
+    public void setAddress(String address){
+        this.address = address;
+    }
+
+    public boolean isActiv(){
+        return BluetoothActiv;
+    }
+
+    private volatile boolean BluetoothActiv = true;
     private void startBluetoothActivityCheck() {
-        if (!checkConnection.isAlive()) {
-            checkConnection = new Thread(new Runnable() {
+        if (!CheckConnection.isAlive()) {
+            CheckConnection = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
-                            if (isBluetoothActive != myBluetoothAdapter.isEnabled()) {
-                                isBluetoothActive = myBluetoothAdapter.isEnabled();
+                            if (BluetoothActiv != myBluetoothAdapter.isEnabled()) {
+                                BluetoothActiv = myBluetoothAdapter.isEnabled();
                                 activity.runOnUiThread(bluetoothInformation);
                             }
-                            checkConnection.sleep(300);
+                            CheckConnection.sleep(200);
                         } catch (InterruptedException e) {
                         }
                     }
                 }
             });
-            checkConnection.start();
+            CheckConnection.start();
+        }
+    }
+
+    private void startReciver() {
+        if (!Reciver.isAlive()) {
+            Reciver = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            if (isConnected) {
+                                int Count_byte = 0;//inStream.available();
+                                if(Count_byte > 0 ){
+                                    inStream.skip(Count_byte-1);
+                                    Value = inStream.read();
+                                } else {
+                                    Value = -1;
+                                }
+                            }
+                            CheckConnection.sleep(2);
+                        } catch (InterruptedException e) {
+                        } catch (IOException e) {
+                        }
+                    }
+                }
+            });
+            Reciver.start();
         }
     }
 
@@ -62,7 +107,7 @@ public class BluetoothHelper {
         @Override
         public void run() {
             Toast toast;
-            if(isBluetoothActive){
+            if(BluetoothActiv){
                 toast = Toast.makeText(context,"Bluetooth active", Toast.LENGTH_SHORT);
             } else {
                 toast = Toast.makeText(context,"Bluetooth not active", Toast.LENGTH_SHORT);
@@ -71,6 +116,10 @@ public class BluetoothHelper {
                     try {
                         if (outStream != null) {
                             outStream.flush();
+                            outStream.close();
+                        }
+                        if (inStream != null) {
+                            inStream.close();
                         }
                         btSocket.close();
                     } catch (IOException e2) {
@@ -93,13 +142,17 @@ public class BluetoothHelper {
             }
             return 0;
         } else {
-            if(!isBluetoothActive) {return 2;}
+            if(!BluetoothActiv) {return 2;}
             if(!isConnected){return 3;}
             return 4;
         }
     }
 
-    public void connect(){
+    public int getValue(){
+        return Value;
+    }
+
+    public void Connect(){
         if(isConnected) {
             try     {
                 if (outStream != null) {
@@ -112,9 +165,10 @@ public class BluetoothHelper {
             toast = Toast.makeText(context,"Disconnected", Toast.LENGTH_SHORT);
             toast.show();
         } else {
+            boolean Connect = true;
             if(myBluetoothAdapter.isEnabled()) {
                 Log.d(TAG, "- попытка соединения...");
-                BluetoothDevice device = myBluetoothAdapter.getRemoteDevice(ADDRESS);
+                BluetoothDevice device = myBluetoothAdapter.getRemoteDevice(address);
                 try {
                     btSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
                     if (myBluetoothAdapter.isDiscovering()) {
@@ -124,14 +178,29 @@ public class BluetoothHelper {
                     btSocket.connect();
                     Log.d(TAG, "...Соединение установлено и готово к передачи данных...");
                     outStream = btSocket.getOutputStream();
+                    inStream = btSocket.getInputStream();
                 } catch (IOException e) {
                     Log.d("Fatal Error", "output stream creation failed:" + e.getMessage() + ".");
+                    Connect = false;
                 }
                 isConnected = true;
             }
-            Toast toast;
-            toast = Toast.makeText(context,"Connected", Toast.LENGTH_SHORT);
-            toast.show();
+            if(!Connect) {
+                try     {
+                    if (outStream != null) {
+                        outStream.flush();
+                    }
+                    btSocket.close();
+                } catch (IOException e2) {}
+                isConnected=false;
+                Toast toast;
+                toast = Toast.makeText(context, "Error: Not Connected", Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                Toast toast;
+                toast = Toast.makeText(context, "Connected", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
     }
 
