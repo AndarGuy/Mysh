@@ -93,15 +93,19 @@
                 android:id="@+id/mouseView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:src="@drawable/run"
                 android:contentDescription="Some mouse"
                 tools:ignore="HardcodedText" />
         </FrameLayout>
 
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/grass" />
+            android:layout_weight="1"
+            android:elevation="1dp"
+            android:background="@color/grass"
+            android:src="@color/grass" />
     </LinearLayout>
 
     <LinearLayout

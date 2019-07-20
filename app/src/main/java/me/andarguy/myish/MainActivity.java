@@ -94,19 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (bluetoothHelper.isConnected()) {
                 blackScreen.setVisibility(View.INVISIBLE);
-                Thread game = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (!mouse.isDied()) {
-                            runOnUiThread(updateAll());
-                            Log.d(TAG, mouse.toString());
-                            try {
-                                Thread.sleep(5);
-                            } catch (InterruptedException ignored) {
-                            }
-                        }
-                    }
-                });
                 game.start();
                 animation.start();
             }
