@@ -90,6 +90,7 @@
             android:layout_height="64dp"
             android:layout_gravity="bottom">
             <ImageView
+                android:id="@+id/mouseView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/run"

@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -26,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
     TextView scoreView, speedView;
     public static DrawView canvasDraw;
     FrameLayout gameAreaLayout;
-    ImageView hider, energyIndicator;
+    ImageView hider, energyIndicator, mouseView;
+
+    boolean animeState = true;
 
     Mouse mouse;
     EnergyIndicator indicator;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         speedView = findViewById(R.id.speed);
         energyIndicator = findViewById(R.id.energyBar);
         hider = findViewById(R.id.hider);
+        mouseView = findViewById(R.id.mouseView);
 
         canvasDraw = new DrawView(this, null);
 
@@ -60,12 +65,12 @@ public class MainActivity extends AppCompatActivity {
     private void startGame() {
         mouse = new Mouse();
         indicator = new EnergyIndicator(hider, energyIndicator);
-        cheese = Cheese.makeCheese();
+        cheese = Cheese.makeCheese(this);
 
         Thread game = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!mouse.isDied()) {
+                while (mouse.isDied()) {
                     runOnUiThread(updateAll());
                     Log.d(TAG, mouse.toString());
                     try {
@@ -76,6 +81,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         game.start();
+
+        Thread animation = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final int MAX_ANIME_TIME = 1000, MIN_ANIME_TIME = 200;
+                while (mouse.isDied()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            changeFrame();
+                        }
+                    });
+                    try {
+                        Thread.sleep(Float.valueOf((MAX_ANIME_TIME - MIN_ANIME_TIME) * (1 - (mouse.getSpeed() / Mouse.MAX_SPEED))).intValue());
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            }
+        });
+        animation.start();
+    }
+
+    private void changeFrame() {
+        if (animeState) {
+            mouseView.setImageDrawable(getDrawable(R.drawable.run2));
+        } else {
+            mouseView.setImageDrawable(getDrawable(R.drawable.run1));
+        }
+        animeState = !animeState;
     }
 
     Runnable updateAll() {
@@ -83,15 +117,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 mouse.update(100);
-                scoreView.setText(String.valueOf(mouse.getScore()));
-                speedView.setText(String.valueOf(mouse.getSpeed()));
+                scoreView.setText(String.valueOf(Float.valueOf(mouse.getScore()).intValue()));
+                speedView.setText(String.valueOf(new DecimalFormat(".##").format(mouse.getSpeed())));
                 indicator.update(mouse);
-                if (cheese != null) {
-                    cheese.update(mouse, MainActivity.this);
+                if (cheese != null && cheese.isActive()) {
+                    cheese.update(mouse,mouseView, MainActivity.this);
                     canvasDraw.invalidate();
                 }
                 else {
-                    cheese = Cheese.makeCheese();
+                    cheese = Cheese.makeCheese(MainActivity.this);
                 }
             }
         };
